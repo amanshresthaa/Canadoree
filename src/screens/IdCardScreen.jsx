@@ -5,7 +5,7 @@ import StudentIdCard from "../components/StudentIdCard.jsx";
 import InfoPopover from "../components/InfoPopover.jsx";
 import ActionSheet from "../components/ActionSheet.jsx";
 
-export default function IdCardScreen({ profile, onBack, onPhotoUpdate }) {
+export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh }) {
   const [showInfo, setShowInfo] = useState(false);
   const [showSheet, setShowSheet] = useState(false);
   const [selfiePreview, setSelfiePreview] = useState(profile.photoSrc);
@@ -16,6 +16,8 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate }) {
   }, [profile.photoSrc]);
 
   const blurred = showInfo || showSheet;
+  const canGoBack = typeof onBack === "function";
+  const canUpdatePhoto = typeof onPhotoUpdate === "function";
 
   const handleRetakeRequest = () => {
     if (fileInputRef.current) {
@@ -32,7 +34,9 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate }) {
     reader.onload = () => {
       if (typeof reader.result === "string") {
         setSelfiePreview(reader.result);
-        onPhotoUpdate(reader.result);
+        if (canUpdatePhoto) {
+          onPhotoUpdate(reader.result);
+        }
         setShowSheet(false);
       }
     };
@@ -44,14 +48,17 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate }) {
   return (
     <div className="relative min-h-screen bg-[#f5f7f8] text-[#1f2a37]">
       <Header
+        variant="mobile"
         left={
-          <button
-            onClick={onBack}
-            className="flex h-12 w-12 items-center justify-center rounded-full text-[#0f7f8e] hover:bg-[#0f7f8e]/10"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="h-5 w-5" strokeWidth={1.8} />
-          </button>
+          canGoBack ? (
+            <button
+              onClick={onBack}
+              className="flex h-12 w-12 items-center justify-center rounded-full text-[#0f7f8e] hover:bg-[#0f7f8e]/10"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="h-5 w-5" strokeWidth={1.8} />
+            </button>
+          ) : null
         }
         title="My ID card"
         right={
@@ -78,7 +85,7 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate }) {
           onClick={() => setShowInfo((value) => !value)}
           aria-pressed={showInfo}
           aria-label="Show card information"
-          className={`info-pulse absolute right-10 top-10 z-20 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#0f7f8e] bg-white text-lg font-semibold text-[#0f7f8e] shadow-[0_10px_24px_rgba(15,40,60,0.15)] transition ${
+          className={`info-pulse absolute right-12 top-0 z-20 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#0f7f8e] bg-white text-lg font-semibold text-[#0f7f8e] shadow-[0_10px_24px_rgba(15,40,60,0.15)] transition ${
             showInfo ? "bg-[#0f7f8e]/10" : ""
           }`}
         >
@@ -92,6 +99,7 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate }) {
         open={showSheet}
         onClose={() => setShowSheet(false)}
         onRetake={handleRetakeRequest}
+        onRefresh={onRefresh}
       />
 
       <input

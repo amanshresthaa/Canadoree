@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export default function ActionSheet({ open, onClose, onRetake }) {
+export default function ActionSheet({ open, onClose, onRetake, onRefresh }) {
   const [refreshState, setRefreshState] = useState("idle");
   const timersRef = useRef([]);
 
@@ -28,6 +28,9 @@ export default function ActionSheet({ open, onClose, onRetake }) {
 
     const loadTimer = setTimeout(() => {
       setRefreshState("done");
+      if (onRefresh) {
+        onRefresh();
+      }
       const successTimer = setTimeout(() => {
         handleClose();
       }, 1000);
