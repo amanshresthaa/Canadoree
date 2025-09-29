@@ -7,6 +7,7 @@ import ActionSheet from "../components/ActionSheet.jsx";
 
 export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh }) {
   const [showInfo, setShowInfo] = useState(false);
+  const [infoButtonVisible, setInfoButtonVisible] = useState(false);
   const [showSheet, setShowSheet] = useState(false);
   const [selfiePreview, setSelfiePreview] = useState(profile.photoSrc);
   const fileInputRef = useRef(null);
@@ -14,6 +15,11 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh
   useEffect(() => {
     setSelfiePreview(profile.photoSrc);
   }, [profile.photoSrc]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setInfoButtonVisible(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const blurred = showInfo || showSheet;
   const canGoBack = typeof onBack === "function";
@@ -85,11 +91,19 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh
           onClick={() => setShowInfo((value) => !value)}
           aria-pressed={showInfo}
           aria-label="Show card information"
-          className={`info-pulse absolute right-12 top-0 z-20 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#0f7f8e] bg-white text-lg font-semibold text-[#0f7f8e] shadow-[0_10px_24px_rgba(15,40,60,0.15)] transition ${
+          className={`info-pulse absolute right-12 top-0 z-20 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#0f7f8e] bg-white text-lg font-semibold text-[#0f7f8e] shadow-[0_10px_24px_rgba(15,40,60,0.15)] transition-all duration-300 ease-out ${
+            infoButtonVisible ? "opacity-100" : "opacity-0"
+          } ${
             showInfo ? "bg-[#0f7f8e]/10" : ""
           }`}
+          style={{
+            transform: infoButtonVisible ? "scale(1)" : "scale(0.75)",
+            transformOrigin: "center",
+          }}
         >
-          <span className="-mt-0.5">i</span>
+          <span className="info-pulse__inner flex h-full w-full items-center justify-center">
+            <span className="-mt-0.5 icon-i">i</span>
+          </span>
         </button>
 
         <InfoPopover open={showInfo} profile={profile} />

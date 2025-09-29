@@ -5,9 +5,9 @@ import SettingsScreen from "./screens/SettingsScreen.jsx";
 import defaultStudentPhotoUrl from "./assets/deepika.jpg";
 
 const initialProfile = {
-  fullName: "Deepika Sharma",
+  fullName: "Pratiksha Manandhar",
   studentId: "C12345678",
-  academicYear: "2024-2025",
+  academicYear: "25/26",
   institution: "Canadore College",
   issuedOn: "Aug 21, 2024",
   downloadedOn: "Aug 21, 2024",

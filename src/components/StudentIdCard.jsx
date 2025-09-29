@@ -40,7 +40,7 @@ export default function StudentIdCard({ profile }) {
 
       <div className="grid grid-cols-3 w-full max-w-[20rem]">
         <div className="col-span-1 w-[90px] justify-self-center">
-          <span className="text-xl font-bold text-[#1a1b1b] pl-1">
+          <span className="text-[1.05rem] font-semibold text-[#1a1b1b] pl-1">
             {academicYear}
           </span>
         </div>
