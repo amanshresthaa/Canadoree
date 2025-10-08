@@ -9,76 +9,12 @@
 }
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 215 28% 17%;
-    --muted: 210 20% 98%;
-    --muted-foreground: 218 11% 65%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 215 28% 17%;
-    --destructive: 352 75% 48%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 216 23% 91%;
-    --input: 216 23% 91%;
-    --ring: 221 83% 53%;
-    --surface: 200 18% 97%;
-    --teal: 187 81% 31%;
-    --success: 159 67% 39%;
-    --chart-1: 221 83% 53%;
-    --chart-2: 187 81% 31%;
-    --chart-3: 352 75% 48%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.75rem;
-  }
-
-  .dark {
-    --background: 222 48% 6%;
-    --foreground: 210 40% 96%;
-    --card: 222 45% 8%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 48% 6%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 221 75% 60%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 215 28% 18%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 216 28% 18%;
-    --muted-foreground: 218 11% 70%;
-    --accent: 216 28% 18%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 352 65% 60%;
-    --destructive-foreground: 210 40% 96%;
-    --border: 216 34% 18%;
-    --input: 216 34% 18%;
-    --ring: 221 75% 60%;
-    --surface: 222 45% 12%;
-    --teal: 187 70% 40%;
-    --success: 159 55% 46%;
-    --chart-1: 221 75% 60%;
-    --chart-2: 187 70% 40%;
-    --chart-3: 352 65% 60%;
-    --chart-4: 43 65% 60%;
-    --chart-5: 27 75% 62%;
-  }
-
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
-    min-height: 100vh;
-    min-height: 100dvh;
   }
 }
 
@@ -171,6 +107,10 @@
   }
 }
 
+body {
+  @apply bg-white font-sans text-gray-900 antialiased;
+}
+
 #root {
-  @apply min-h-[100dvh] w-full;
+  @apply w-full;
 }
