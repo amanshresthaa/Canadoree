@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+} from "@/components/ui/sheet";
+
 export default function ActionSheet({ open, onClose, onRetake, onRefresh }) {
   const [refreshState, setRefreshState] = useState("idle");
   const timersRef = useRef([]);
@@ -12,9 +19,7 @@ export default function ActionSheet({ open, onClose, onRetake, onRefresh }) {
     }
   }, [open]);
 
-  if (!open) return null;
-
-  const handleClose = () => {
+  const handleSheetClose = () => {
     timersRef.current.forEach((id) => clearTimeout(id));
     timersRef.current = [];
     setRefreshState("idle");
@@ -32,7 +37,7 @@ export default function ActionSheet({ open, onClose, onRetake, onRefresh }) {
         onRefresh();
       }
       const successTimer = setTimeout(() => {
-        handleClose();
+        handleSheetClose();
       }, 1000);
       timersRef.current.push(successTimer);
     }, 1400);
@@ -47,43 +52,51 @@ export default function ActionSheet({ open, onClose, onRetake, onRefresh }) {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col justify-end">
-      <button
-        onClick={handleClose}
-        aria-label="Close actions"
-        className="h-full w-full bg-black/20"
-      />
-      <div className="relative rounded-t-3xl border-t border-[#d5dde3] bg-white pb-10 pt-5 shadow-[0_-20px_40px_rgba(8,35,52,0.25)]">
-        <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-[#d5dde3]" />
+    <Sheet
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) {
+          handleSheetClose();
+        }
+      }}
+    >
+      <SheetContent side="bottom" className="pb-10 pt-5">
+        <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-[#d5dde3]" aria-hidden />
         <div className="space-y-3 px-5">
-          <button
+          <Button
+            type="button"
+            variant="outline"
             onClick={handleRetakeSelfie}
-            className="w-full rounded-full border border-[#0f7f8e] bg-white px-4 py-3 text-base font-semibold text-[#0f7f8e] shadow-[0_8px_20px_rgba(15,40,60,0.08)] transition hover:-translate-y-[1px] hover:shadow-[0_10px_24px_rgba(15,40,60,0.12)] active:scale-[0.99]"
+            className="w-full rounded-full border-[hsl(var(--teal))] bg-white px-4 py-3 text-base font-semibold text-[hsl(var(--teal))] shadow-[0_8px_20px_rgba(15,40,60,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(15,40,60,0.12)]"
           >
             Retake my selfie
-          </button>
-          <button
+          </Button>
+          <Button
+            type="button"
+            variant={refreshState === "done" ? "secondary" : "teal"}
             onClick={handleRefresh}
             disabled={refreshState === "loading"}
-            className={`flex w-full items-center justify-center gap-2 rounded-full border px-4 py-3 text-base font-semibold transition hover:-translate-y-[1px] active:scale-[0.99] ${
+            className={`flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-base font-semibold transition hover:-translate-y-0.5 ${
               refreshState === "done"
-                ? "border-[#21a878] bg-[#e6f7f0] text-[#1e7f54] shadow-[0_8px_18px_rgba(33,168,120,0.22)]"
-                : "border-[#0f7f8e] bg-white text-[#0f7f8e] shadow-[0_8px_20px_rgba(15,40,60,0.08)]"
+                ? "border border-[#21a878] bg-[#e6f7f0] text-[#1e7f54] shadow-[0_8px_18px_rgba(33,168,120,0.22)]"
+                : "shadow-[0_8px_20px_rgba(15,40,60,0.08)]"
             } ${refreshState === "loading" ? "cursor-wait opacity-80" : ""}`}
           >
             {refreshState === "loading" && (
               <span
-                className="h-4 w-4 animate-spin rounded-full border-[3px] border-transparent border-t-[#0f7f8e]"
+                className="h-4 w-4 animate-spin rounded-full border-[3px] border-transparent border-t-[hsl(var(--teal))]"
                 aria-hidden
               />
             )}
             {refreshState === "done" ? "ID refreshed" : "Refresh my digital ID"}
-          </button>
+          </Button>
+        </div>
+        <SheetFooter className="px-5">
           <p className="px-3 text-center text-sm leading-relaxed text-[#6b7a89]">
             Refreshing your digital ID helps us know you’re still a student and your ID is valid.
           </p>
-        </div>
-      </div>
-    </div>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }

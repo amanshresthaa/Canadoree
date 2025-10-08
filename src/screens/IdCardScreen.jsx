@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { ArrowLeft, MoreVertical } from "lucide-react";
 import Header from "../components/Header.jsx";
 import StudentIdCard from "../components/StudentIdCard.jsx";
@@ -6,7 +8,7 @@ import InfoPopover from "../components/InfoPopover.jsx";
 import ActionSheet from "../components/ActionSheet.jsx";
 
 export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh }) {
-  const [showInfo, setShowInfo] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const [infoButtonVisible, setInfoButtonVisible] = useState(false);
   const [showSheet, setShowSheet] = useState(false);
   const [selfiePreview, setSelfiePreview] = useState(profile.photoSrc);
@@ -21,7 +23,7 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  const blurred = showInfo || showSheet;
+  const blurred = infoOpen || showSheet;
   const canGoBack = typeof onBack === "function";
   const canUpdatePhoto = typeof onPhotoUpdate === "function";
 
@@ -52,33 +54,39 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh
   const cardProfile = { ...profile, photoSrc: selfiePreview };
 
   return (
-    <div className="relative min-h-screen bg-[#f5f7f8] text-[#1f2a37]">
+    <div className="relative flex min-h-[100dvh] w-full flex-col bg-[#f5f7f8] text-[#1f2a37]">
       <Header
         variant="mobile"
         left={
           canGoBack ? (
-            <button
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
               onClick={onBack}
-              className="flex h-12 w-12 items-center justify-center rounded-full text-[#0f7f8e] hover:bg-[#0f7f8e]/10"
               aria-label="Go back"
+              className="rounded-full text-[hsl(var(--teal))] hover:bg-[hsl(var(--teal))]/10"
             >
               <ArrowLeft className="h-5 w-5" strokeWidth={1.8} />
-            </button>
+            </Button>
           ) : null
         }
         title="My ID card"
         right={
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => setShowSheet(true)}
-            className="flex h-12 w-12 items-center justify-center rounded-full text-[#0f7f8e] hover:bg-[#0f7f8e]/10"
             aria-label="More actions"
+            className="rounded-full text-[hsl(var(--teal))] hover:bg-[hsl(var(--teal))]/10"
           >
             <MoreVertical className="h-5 w-5" strokeWidth={1.8} />
-          </button>
+          </Button>
         }
       />
 
-      <div className="relative mx-auto w-full max-w-md px-6 pb-28 pt-4">
+      <div className="relative mx-auto flex w-full max-w-md flex-1 flex-col px-6 pb-28 pt-4">
         <div
           className={`transition duration-300 ease-out ${
             blurred ? "scale-[0.98] opacity-60 blur-[1.5px]" : "scale-100 opacity-100 blur-0"
@@ -87,26 +95,29 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh
           <StudentIdCard profile={cardProfile} />
         </div>
 
-        <button
-          onClick={() => setShowInfo((value) => !value)}
-          aria-pressed={showInfo}
-          aria-label="Show card information"
-          className={`info-pulse absolute right-12 top-0 z-20 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#0f7f8e] bg-white text-lg font-semibold text-[#0f7f8e] shadow-[0_10px_24px_rgba(15,40,60,0.15)] transition-all duration-300 ease-out ${
-            infoButtonVisible ? "opacity-100" : "opacity-0"
-          } ${
-            showInfo ? "bg-[#0f7f8e]/10" : ""
-          }`}
-          style={{
-            transform: infoButtonVisible ? "scale(1)" : "scale(0.75)",
-            transformOrigin: "center",
-          }}
-        >
-          <span className="info-pulse__inner flex h-full w-full items-center justify-center">
-            <span className="-mt-0.5 icon-i">i</span>
-          </span>
-        </button>
-
-        <InfoPopover open={showInfo} profile={profile} />
+        <Popover open={infoOpen} onOpenChange={setInfoOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="pulse"
+              size="pulse"
+              aria-pressed={infoOpen}
+              aria-label="Show card information"
+              className={`absolute right-12 top-0 z-20 ${
+                infoButtonVisible ? "opacity-100" : "opacity-0"
+              } transition-all duration-300 ease-out`}
+              style={{
+                transform: infoButtonVisible ? "scale(1)" : "scale(0.75)",
+                transformOrigin: "center",
+              }}
+            >
+              <span className="info-pulse__inner flex h-full w-full items-center justify-center">
+                <span className="-mt-0.5 icon-i">i</span>
+              </span>
+            </Button>
+          </PopoverTrigger>
+          <InfoPopover profile={profile} />
+        </Popover>
       </div>
 
       <ActionSheet
