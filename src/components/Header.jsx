@@ -1,8 +1,30 @@
 import React from "react";
 
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+
 export default function Header({ left, title, right, variant = "marketing" }) {
   const isMobileVariant =
     variant === "mobile" || left !== undefined || right !== undefined || title;
+
+  const navigationItems = [
+    { href: "#features", label: "Features" },
+    { href: "#testimonials", label: "Testimonials" },
+    { href: "#about", label: "About" },
+    { href: "#contact", label: "Contact" },
+  ];
 
   if (isMobileVariant) {
     return (
@@ -13,7 +35,7 @@ export default function Header({ left, title, right, variant = "marketing" }) {
           </div>
           <div className="flex flex-shrink-0 items-center justify-center px-2">
             {title ? (
-              <h1 className="text-base font-semibold uppercase tracking-[0.24em] text-[#0f7f8e]">
+              <h1 className="text-base font-semibold uppercase tracking-[0.24em] text-[hsl(var(--teal))]">
                 {title}
               </h1>
             ) : null}
@@ -37,44 +59,54 @@ export default function Header({ left, title, right, variant = "marketing" }) {
             <span className="ml-2 text-xl font-bold text-gray-900">Canadore</span>
           </div>
         </div>
-        <nav className="hidden space-x-8 md:flex">
-          <a
-            href="#features"
-            className="px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-primary-600"
-          >
-            Features
-          </a>
-          <a
-            href="#testimonials"
-            className="px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-primary-600"
-          >
-            Testimonials
-          </a>
-          <a
-            href="#about"
-            className="px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-primary-600"
-          >
-            About
-          </a>
-          <a
-            href="#contact"
-            className="px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-primary-600"
-          >
-            Contact
-          </a>
-        </nav>
+        <NavigationMenu className="hidden md:flex">
+          <NavigationMenuList>
+            {navigationItems.map((item) => (
+              <NavigationMenuItem key={item.href}>
+                <NavigationMenuLink
+                  href={item.href}
+                  className={navigationMenuTriggerStyle()}
+                >
+                  {item.label}
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
         <div className="flex items-center space-x-4">
-          <button className="hidden items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 md:inline-flex">
+          <Button
+            type="button"
+            variant="outline"
+            className="hidden border-gray-300 text-gray-700 shadow-sm hover:bg-gray-50 md:inline-flex"
+          >
             Sign In
-          </button>
-          <button className="inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors bg-primary-600 hover:bg-primary-700">
+          </Button>
+          <Button type="button" className="bg-primary-600 hover:bg-primary-700">
             Get Started
-          </button>
-          <button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 md:hidden">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 md:hidden"
+              >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {navigationItems.map((item) => (
+                <DropdownMenuItem key={item.href} asChild>
+                  <a href={item.href} className="flex w-full items-center gap-2">
+                    {item.label}
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

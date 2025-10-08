@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
 import IdCardScreen from "./screens/IdCardScreen.jsx";
 import HomeScreen from "./screens/HomeScreen.jsx";
 import SettingsScreen from "./screens/SettingsScreen.jsx";
@@ -67,32 +68,39 @@ export default function App() {
     }));
   };
 
+  let screen = null;
+
   if (activeScreen === "home") {
-    return (
+    screen = (
       <HomeScreen
         profile={profile}
         onOpenId={() => navigateTo("id")}
         onOpenSettings={() => navigateTo("settings")}
       />
     );
-  }
-
-  if (activeScreen === "settings") {
-    return (
+  } else if (activeScreen === "settings") {
+    screen = (
       <SettingsScreen
         profile={profile}
         onOpenId={() => navigateTo("id")}
         onCancel={goBack}
       />
     );
+  } else {
+    screen = (
+      <IdCardScreen
+        profile={profile}
+        onBack={goBack}
+        onPhotoUpdate={handlePhotoUpdate}
+        onRefresh={handleProfileRefresh}
+      />
+    );
   }
 
   return (
-    <IdCardScreen
-      profile={profile}
-      onBack={goBack}
-      onPhotoUpdate={handlePhotoUpdate}
-      onRefresh={handleProfileRefresh}
-    />
+    <>
+      {screen}
+      <Toaster />
+    </>
   );
 }
