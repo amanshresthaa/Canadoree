@@ -52,7 +52,7 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh
   const cardProfile = { ...profile, photoSrc: selfiePreview };
 
   return (
-    <div className="relative min-h-screen bg-[#f5f7f8] text-[#1f2a37]">
+    <div className="relative flex min-h-screen flex-col bg-[#f5f7f8] text-[#1f2a37]">
       <Header
         variant="mobile"
         left={
@@ -78,13 +78,16 @@ export default function IdCardScreen({ profile, onBack, onPhotoUpdate, onRefresh
         }
       />
 
-      <div className="relative mx-auto w-full max-w-md px-6 pb-28 pt-4">
+      <div className="relative mx-auto flex w-full max-w-md flex-1 flex-col px-6 pb-24 pt-4 sm:pb-28">
         <div
-          className={`transition duration-300 ease-out ${
+          className={`flex min-h-0 w-full flex-1 transition duration-300 ease-out ${
             blurred ? "scale-[0.98] opacity-60 blur-[1.5px]" : "scale-100 opacity-100 blur-0"
           }`}
         >
-          <StudentIdCard profile={cardProfile} />
+          <StudentIdCard
+            profile={cardProfile}
+            className="min-h-[26rem] sm:min-h-[32rem]"
+          />
         </div>
 
         <button
